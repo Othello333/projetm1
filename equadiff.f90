@@ -1,10 +1,12 @@
 !Ce code Fortran modelise le mouvement d'une planete autour du soleil. GM=1, M>>m
 
 !Execution:
-!gfortran equadiff.f90 -o equadiff.x
+!gfortran equadiff.f90 -o equadifff90.x
+
+!Temps pris par la fonction principale : 0.054 seconde.
 
 !Gnuplot:
-!plot 'rk4.out' using 2:3
+!plot 'equadiffrk4f90.out' using 2:3
 !set xlabel 'x'
 !set ylabel 'y'
 !replot
@@ -21,7 +23,7 @@
 !Xderiv(3)=-x/(r^3)
 !Xderiv(4)=-y/(r^3)
 
-!conditions initiales annoncees dans l'enonce // 
+!conditions initiales annoncees dans l'enonce // utilisees ici
 !x0=0 // x0=1
 !y0=1 // y0=0
 !vx0=-0.5 // vx0=0
@@ -29,10 +31,12 @@
 
 program  meca_planet
 implicit none
-real (8) :: dt ,t ,ener
+real (8) :: dt ,t
 integer  :: i
 real(8),  dimension (4) :: X, Xderiv
 external  :: euler, deriv_planet, rk4
+
+real :: start, finish!pour compter temps execution du programme
 
 t=0.
 dt=0.01
@@ -40,24 +44,31 @@ dt=0.01
 !Initialization
 X=(/1.,0.,0.,-0.5/)
 
-open(11,file='rk4.out')
+open(11,file='equadiffrk4f90.out')
+
+call cpu_time(start)!on commence a compter
 
 do i=1,100000!tmax=0.01*100000=1000
 	t=t+dt
 	call  rk4(t,X,dt,4,deriv_planet)
-	ener =0.5*(X(3)**2+X(4)**2)-1/sqrt(X(1)**2+X(2)**2)
 	if (mod(nint(t/dt),10).eq.0) then
-		write(11,*) t, X!, ener
+		write(11,*) t, X(1),X(2)
 	endif
 enddo
+
+call cpu_time(finish)!on arrete de compter
+
 close (11)
+
+print '("Time = ",f6.3," seconds.")',finish-start
+
 end program meca_planet
 
 subroutine deriv_planet(t,X,Xderiv,n)
 implicit none
 integer, intent(in) :: n
-real(8), intent (in) :: t
-real(8) :: xnew, ynew, radius
+real(8), intent (in) :: t!pourquoi on definit t dans deriv_planet mais ensuite on ne l'utilise pas?
+real(8) :: radius
 real(8), dimension(n), intent(in) :: X
 real(8), dimension(n), intent(out) :: Xderiv
 if (n.ne.4) write (*,*) 'WARNING: dimension de n incorrecte, devrait etre 4'
