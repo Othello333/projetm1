@@ -1,0 +1,10 @@
+N-Body / Particle Simulation Methods
+http://www.cs.cmu.edu/afs/cs/academic/class/15850c-s96/www/nbody.html
+N-Body integration via 4th-order Runge Kutta (fortran)
+https://github.com/dh4gan/nbody-rk4
+N-Body integration via 4th-order Runge Kutta (java)
+https://physics.princeton.edu//~fpretori/Nbody/code.htm
+N-Body Hermite block-step formulation (fortran)
+https://www.ast.cam.ac.uk/research/nbody
+Vidéo exemple NBody
+https://trekto.info/n-body-simulation
